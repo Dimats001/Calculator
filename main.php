@@ -3,6 +3,8 @@
     <head>
         <meta charset = "utf-8">
         <title>Калькулятор</title>
+
+
         <style>
             #form{
                 width: 317px;
@@ -29,87 +31,93 @@
         </style>
    </head>
     <body>
-        <?php
-        session_start();
-        if(isset($_POST['val']))
-            $val = $_POST['val'];
-        else
-            $val = 0;
+        <form id = "form">
+                <input type = "hidden" id = "hid">
+                <input type = "text" id = 'in' value = "0">
+                <input type = 'button' value = 'C' class = 'but' id = 'clear' onclick = "Clear('all')">
+                <input type = 'button' value = '&larr;' class = 'but' id = 'clear1' onclick = "Clear('1')">
+                <input type = 'button' value = '.' class = 'but'>
+                <input type = 'button' value = '+' class = 'but' id = 'operation+' onclick = "operation('+')">
+                <input type = 'button' value = '9' class = 'but' id = 'number9' onclick = "setNum('9')">
+                <input type = 'button' value = '8' class = 'but' id = 'number8' onclick = "setNum('8')">
+                <input type = 'button' value = '7' class = 'but' id = 'number7' onclick = "setNum('7')">
+                <input type = 'button' value = '-' class = 'but' id = 'operation-' onclick = "operation('-')">
+                <input type = 'button' value = '6' class = 'but' id = 'number6' onclick = "setNum('6')">
+                <input type = 'button' value = '5' class = 'but' id = 'number5' onclick = "setNum('5')">
+                <input type = 'button' value = '4' class = 'but' id = 'number4' onclick = "setNum('4')">
+                <input type = 'button' value = 'x' class = 'but' id = 'operationX' onclick = "operation('x')">
+                <input type = 'button' value = '3' class = 'but' id = 'number3' onclick = "setNum('3')">
+                <input type = 'button' value = '2' class = 'but' id = 'number2' onclick = "setNum('2')">
+                <input type = 'button' value = '1' class = 'but' id = 'number1' onclick = "setNum('1')">
+                <input type = 'button' value = '/' class = 'but' id = 'operationSlash' onclick = "operation('/')">
+                <input type = 'button' value = 'e' class = 'but'>
+                <input type = 'button' value = '0' class = 'but' id = 'number0' onclick = "setNum('0')">
+                <input type = 'button' value = "&pi;" class = 'but'>
+                <input type = 'button' value = '=' class = 'but' id = 'eq' onclick = "res()">
+        </form>
+        <div id = "test"></div>
+        <script>
+            function res(){
+                var length = getVal("hid").length
+                var num1 = numFromString(getVal("hid"))
+                var num2 = getVal("in")
 
-        if(isset($_POST['number']))
-            if($val == 0)
-                $val = $_POST['number'];
-            else
-                $val = $val * 10 + $_POST['number'];
-
-
-        if(isset($_POST['clear'])){
-            $val = 0;
-            session_destroy();
-        }
-
-        if(isset($_POST['clear1'])){
-            $r = $val % 10;
-            $val -= $r;
-            $val /= 10;
-        }
-
-        if(isset($_POST['operation'])){
-            $_SESSION['value1'] = $val;
-            $_SESSION['operation'] = $_POST['operation'];
-            $val = 0;
-        }
-
-        if(isset($_POST['eq']))
-            if(isset($_SESSION['value1'])){
-                switch($_SESSION['operation']){
-                    case "+":
-                        $val += $_SESSION['value1'];
-                        unset($_SESSION['value1']);
-                        break;
-                    case "-":
-                        $val = $_SESSION['value1'] - $val;
-                        unset($_SESSION['value1']);
-                        break;
-                    case "x":
-                        $val *= $_SESSION['value1'];
-                        unset($_SESSION['value1']);
-                        break;
-                    case "/":
-                        $val = intdiv($_SESSION['value1'], $val);
-                        unset($_SESSION['value1']);
-                        break;
-
+              //  document.getElementById("test").value =
+                if(getVal("hid") == "")
+                    return
+                else{
+                    switch(getVal("hid")[length -1]){
+                        case "+":
+                            var num = parseInt(num1) + parseInt(num2)
+                            break
+                        case "-":
+                            var num = num1 - num2
+                            break
+                        case "/":
+                            var num = parseInt(num1 / num2)
+                            break
+                        case "x":
+                            var num = num1 * num2
+                            break
+                    }
+                    document.getElementById("hid").value = ""
                 }
+                document.getElementById("in").value = num
             }
 
+            function operation(op){ //oper
+                num = getVal("in")
+                document.getElementById("in").value = ""
+                document.getElementById("hid").value = num + op
 
-        echo <<< _END
-            <form action = 'main.php' method = 'POST' id = 'form'>
-                <input type = 'hidden' name = 'val' value = '$val'>
-                <input type = "text" id = 'in' value = "$val">
-                <input type = 'submit' value = 'C' class = 'but' name = 'clear'>
-                <input type = 'submit' value = '&larr;' class = 'but' name = 'clear1'>
-                <input type = 'button' value = '.' class = 'but'>
-                <input type = 'submit' value = '+' class = 'but' name = 'operation'>
-                <input type = 'submit' value = '9' class = 'but' name = 'number'>
-                <input type = 'submit' value = '8' class = 'but' name = 'number'>
-                <input type = 'submit' value = '7' class = 'but' name = 'number'>
-                <input type = 'submit' value = '-' class = 'but' name = 'operation'>
-                <input type = 'submit' value = '6' class = 'but' name = 'number'>
-                <input type = 'submit' value = '5' class = 'but' name = 'number'>
-                <input type = 'submit' value = '4' class = 'but' name = 'number'>
-                <input type = 'submit' value = 'x' class = 'but' name = 'operation'>
-                <input type = 'submit' value = '3' class = 'but' name = 'number'>
-                <input type = 'submit' value = '2' class = 'but' name = 'number'>
-                <input type = 'submit' value = '1' class = 'but' name = 'number'>
-                <input type = 'submit' value = '/' class = 'but' name = 'operation'>
-                <input type = 'button' value = 'e' class = 'but'>
-                <input type = 'submit' value = '0' class = 'but' name = 'number'>
-                <input type = 'button' value = "&pi;" class = 'but'>
-                <input type = 'submit' value = '=' class = 'but' name = 'eq'>
-            </form>
-        _END;
-        ?>
+            }
+
+            function setNum(num){
+                document.getElementById("in").value = getVal("in") * 10 + parseInt(num)
+            }
+
+            function Clear(val){
+                if(val == "all")
+                    document.getElementById("in").value = 0
+                else
+                    document.getElementById("in").value = parseInt(getVal("in") / 10)
+            }
+
+            function getVal(id){
+                return document.getElementById(id).value
+            }
+
+            function numFromString(str){
+                var number = 0
+                var j = str.length - 2
+                for(var i = str.length - 2; i > -1; i--){
+                    if(i != j)
+                        number += (10 ** (j - i)) * parseInt(str[i])
+                    else
+                        number += parseInt(str[i])
+                }
+                return number
+            }
+        </script>
     </body>
 </html>
